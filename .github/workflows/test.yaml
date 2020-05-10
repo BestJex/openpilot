@@ -41,13 +41,13 @@ jobs:
         TEST_DIR=tmppilot
 
         mkdir $TEST_DIR
-        cp -pR --parents $(cat release/files_common | td '\n' ' ') $TARGET_DIR
+        cp -pR --parents $(cat release/files_common) $TARGET_DIR
 
         # copy submodules
         cp -r panda/ opendbc/ cereal/ $TEST_DIR
 
         # need this to build on x86
-        cp -r external/capnp $TEST_DIR
+        cp -r phonelibs/capnp-cpp $TEST_DIR/phonelibs
 
         # need these so docker copy won't fail
         cp .coveragerc-app $TARGET_DIR
