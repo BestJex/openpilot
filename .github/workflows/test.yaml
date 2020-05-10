@@ -36,16 +36,29 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Build docker image
+    - name: Strip non-release files
       run: |
+        TEST_DIR=tmppilot
+
+        mkdir $TEST_DIR
+        cp -pR --parents $(cat release/files_common | td '\n' ' ') $TARGET_DIR
+
+        # copy submodules
+        cp -r panda/ opendbc/ cereal/ $TEST_DIR
+
+        # need this to build on x86
+        cp -r external/capnp $TEST_DIR
+
+        # need these so docker copy won't fail
+        cp .coveragerc-app $TARGET_DIR
+        cd $TEST_DIR
+        mkdir pyextra laika laika_repo tools release
+    - name: Build
+      run: |
+        cd tmppilot
         docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile.openpilot) || true
         docker pull docker.io/commaai/openpilot:latest || true
         docker build --cache-from docker.io/commaai/openpilot:latest -t tmppilot -f Dockerfile.openpilot .
-    - name: Build release
-      run: |
-        FILES=$(cat release/files_common | tr '\n' ' ')
-        CMD="cd /tmp && mv openpilot tmppilot && mkdir openpilot && cd tmppilot && scons -c && cp -pR --parents $FILES panda/ opendbc/ cereal/ phonelibs/ selfdrive/modeld/runners/ /tmp/openpilot && cd /tmp/openpilot && scons -j$(nproc)"
-        docker run tmppilot /bin/bash -c "$CMD"
 
   push:
     name: push
