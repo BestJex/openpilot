@@ -50,6 +50,7 @@ jobs:
         cp -r phonelibs/capnp-cpp $TEST_DIR/phonelibs
 
         # need these so docker copy won't fail
+        cp Dockerfile.openpilot $TEST_DIR
         cp .coveragerc-app $TEST_DIR
         cd $TEST_DIR
         mkdir pyextra laika laika_repo tools release
