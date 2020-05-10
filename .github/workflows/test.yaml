@@ -41,7 +41,7 @@ jobs:
         TEST_DIR=tmppilot
 
         mkdir $TEST_DIR
-        cp -pR --parents --target-directory=$TARGET_DIR $(cat release/files_common)
+        cp -pR --parents $(cat release/files_common) $TEST_DIR
 
         # copy submodules
         cp -r panda/ opendbc/ cereal/ $TEST_DIR
@@ -50,7 +50,7 @@ jobs:
         cp -r phonelibs/capnp-cpp $TEST_DIR/phonelibs
 
         # need these so docker copy won't fail
-        cp .coveragerc-app $TARGET_DIR
+        cp .coveragerc-app $TEST_DIR
         cd $TEST_DIR
         mkdir pyextra laika laika_repo tools release
     - name: Build
