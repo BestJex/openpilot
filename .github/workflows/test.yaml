@@ -41,7 +41,7 @@ jobs:
         TEST_DIR=tmppilot
 
         mkdir $TEST_DIR
-        cp -pR --parents -t $TARGET_DIR $(cat release/files_common)
+        cp -pR --parents --target-directory=$TARGET_DIR $(cat release/files_common)
 
         # copy submodules
         cp -r panda/ opendbc/ cereal/ $TEST_DIR
